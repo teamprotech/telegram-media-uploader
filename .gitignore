@@ -1,0 +1,7 @@
+.config
+env
+config
+logs
+*.session
+*.session-journal
+tmp
