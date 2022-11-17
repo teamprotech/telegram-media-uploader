@@ -1,5 +1,5 @@
 import asyncio
-from telethon import TelegramClient, events
+from telethon import TelegramClient, errors, events
 from telethon.tl.functions.messages import GetAllChatsRequest
 from datetime import datetime, timedelta
 import sys, os
@@ -80,7 +80,13 @@ async def main():
                 file_path = sys.argv[file_num]
                 start_time = datetime.now()
                 print("Now uploading file", file_path)
-                await client.send_file(chat, file_path, caption = lect_caption, supports_streaming=True, progress_callback=callback)
+                try:
+                    await client.send_file(chat, file_path, caption = lect_caption, supports_streaming=True, progress_callback=callback)
+                except errors.FloodWaitError as e:
+                    print("[FloodWaitError] Failed to upload :", file_path, "!!!!!")
+                    print("[FloodWaitError] were asked to wait for", e.seconds, " but will be waiting for", e.seconds + 120)
+                    asyncio.sleep(e.seconds + 120)
+                    continue
                 with open('.config/data_log', 'r') as file:
                     final_data = int(file.read())
                 print('  Uploaded', final_data, 'out of', final_data, 'bytes [','#' * 50, '] {:2.2%}'.format(1))
