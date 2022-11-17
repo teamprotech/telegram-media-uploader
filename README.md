@@ -12,6 +12,17 @@ And this script will automatically, resume from where it was failed!!!
 
 BUT, if 1st-Argument is passed as "--fresh", then script will NOT resume and will treat that you want to execute a fresh-new set of files.
 
+## Features are listed below:
+
+1. Resuming the upload
+2. Chat-Title based : no headache of finding & working with chat-id
+3. progress-BAR reporting
+4. Speed reporting for each file uploaded
+5. Takes multiple file-path list, from different directories in a sinle command
+6. Log file_Size & taken_Time for every uploaded-file
+7. Set Caption, enable-Streaming automatically
+
+
 ## Dependencies are given into the requirements-file and can be installed using pip as below:
 
 ```
