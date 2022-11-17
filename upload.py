@@ -23,6 +23,7 @@ def callback(current, total):
 
 async def main():
     save_oneless = False
+    old_heading = "Random_lectName"
     n = len(sys.argv)
     try:
         os.mkdir('.config')
@@ -52,6 +53,12 @@ async def main():
             while True:
                 if not file_num < n:
                     break
+                new_heading = sys.argv[file_num].split("/")[-1].rsplit("_", 2)[0]
+                if not old_heading == new_heading:
+                    print("Subject/Series changed... so Changing/Sending the new HEADING before uploading this new series...")
+                    send_heading = new_heading.replace("_", " ") + " ✅ ✅"
+                    await client.send_message(chat, send_heading)
+                    old_heading = new_heading
                 count_called = 0
                 lect_caption = sys.argv[file_num].split("/")[-1].split(".")[0]
                 file_path = sys.argv[file_num]
