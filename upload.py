@@ -9,9 +9,11 @@ def callback(current, total):
     with open(".config/data_log", "w") as file:
         file.write(str(current))
     global count_called; global mb_size
-    if count_called > 700:
-        print('Downloaded', current, 'out of', total, 'bytes: {:.2%}'.format(current / total))
-        print("Calling_Count is = ", count_called)
+    if count_called > 150:
+        hash_total = 50
+        hash_count = round(hash_total*(round(current*100/total))/100)
+        dash_count = hash_total - hash_count
+        print('  Uploaded', current, 'out of', total, 'bytes [','#' * hash_count, '-' * dash_count, '] {:2.2%}'.format(current/total), end="\r")
         count_called = 0
         mb_size = round(total/1024/1024)
     else:
@@ -79,9 +81,11 @@ async def main():
                 start_time = datetime.now()
                 print("Now uploading file", file_path)
                 await client.send_file(chat, file_path, caption = lect_caption, supports_streaming=True, progress_callback=callback)
-                print("Successfully sent the file...")
+                with open('.config/data_log', 'r') as file:
+                    final_data = int(file.read())
+                print('  Uploaded', final_data, 'out of', final_data, 'bytes [','#' * 50, '] {:2.2%}'.format(1))
                 time_taken = (datetime.now() - start_time).total_seconds()
-                print("Size-MB was: ", mb_size, "And time taken was: ", time_taken)
+                print("  Successfully uploaded Size-MB:", mb_size, "in time seconds: ", time_taken, "at Speed of:", mb_size/time_taken)
                 print("Saving last_state to .config/last_done...")
                 with open(".config/last_done", "w") as file:
                     if save_oneless:
