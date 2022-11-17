@@ -4,10 +4,6 @@ from telethon.tl.functions.messages import GetAllChatsRequest
 from datetime import datetime, timedelta
 import sys, os
 
-api_id = Your_api_id_number
-api_hash = 'Your_api_hash_string'
-chat_title = 'Chat_Title_to_Upload'
-
 # Printing download progress
 def callback(current, total):
     with open(".config/data_log", "w") as file:
@@ -29,6 +25,24 @@ async def main():
         os.mkdir('.config')
     except:
         pass
+    try:
+        print("Trying to get api&chat details from .config/api_details if available...")
+        with open('.config/api_details', 'r') as f:
+            lines = f.read().splitlines()
+            api_id = int(lines[0].split()[0])
+            api_hash = lines[1].split()[0]
+            chat_title = lines[2]
+    except:
+        print("Looks you running first time & api&chat details are not saved...")
+        api_id = int(input("Please enter api-id: "))
+        api_hash = input("Now enter api-hash: ")
+        chat_title = input("Finally enter the Chat-Title to work upon: ")
+        with open('.config/api_details', 'w') as f:
+            f.write(str(api_id))
+            f.write("\n")
+            f.write(api_hash)
+            f.write("\n")
+            f.write(chat_title)
     try:
         with open(".config/last_done", "r") as file:
             file_num = int(file.read()) + 1
