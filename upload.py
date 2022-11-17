@@ -22,6 +22,7 @@ def callback(current, total):
         count_called += 1
 
 async def main():
+    save_oneless = False
     n = len(sys.argv)
     try:
         os.mkdir('.config')
@@ -34,6 +35,7 @@ async def main():
         file_num = 1
     if sys.argv[1] == "--fresh":
         file_num = 2
+        save_oneless = True
     print("Lenght of args is:", n, "And value of file_num to start with is:", file_num)
 
     client = TelegramClient('media_downloader', api_id, api_hash)
@@ -61,7 +63,10 @@ async def main():
                 print("Size-MB was: ", mb_size, "And time taken was: ", time_taken)
                 print("Saving last_state to .config/last_done...")
                 with open(".config/last_done", "w") as file:
-                    file.write(str(file_num))
+                    if save_oneless:
+                        file.write(str(file_num - 1))
+                    else:
+                        file.write(str(file_num))
                 file_num += 1
                 print("Now Sleeping for 20-seconds before next upload...")
                 await asyncio.sleep(20)
