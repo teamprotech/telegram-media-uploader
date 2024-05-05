@@ -5,3 +5,4 @@ logs
 *.session
 *.session-journal
 tmp
+*.bak

@@ -1,6 +1,5 @@
 import asyncio
 from telethon import TelegramClient, errors, events
-from telethon.tl.functions.messages import GetAllChatsRequest
 from datetime import datetime, timedelta
 import sys, os
 
@@ -58,8 +57,7 @@ async def main():
     client = TelegramClient('media_downloader', api_id, api_hash)
     await client.start()
     print("Connected now...")
-    chats = await client(GetAllChatsRequest(except_ids=[]))
-    for _, chat in enumerate(chats.chats):
+    async for chat in client.iter_dialogs(limit = 15):
         if chat.title == chat_title:
             chat_found = True
             print("found chat with title", chat_title)
