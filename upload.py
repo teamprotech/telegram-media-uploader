@@ -79,7 +79,22 @@ async def main():
                 start_time = datetime.now()
                 print("Now uploading file", file_path)
                 try:
-                    await client.send_file(chat, file_path, caption = lect_caption, supports_streaming=True, progress_callback=callback)
+                    #cmd = ["ffmpeg","-y", "-ss", "00:01:55", "-i", file_path, "-vf", "'scale=640:360:force_original_aspect_ratio=decrease'", "-qscale:v", "1", "-qmin", "1", "-vframes", "1", "thumb.jpg"]
+                    cmd = "ffmpeg -y -ss 00:00:55 -i \"" + file_path + "\" -vf 'scale=640:360:force_original_aspect_ratio=decrease' -qscale:v 1 -qmin 1 -vframes 1 thumb.jpg"
+                    proc = await asyncio.create_subprocess_shell(
+                        cmd,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.PIPE)
+                    #As soon as the .create_subprocess_shell() called it started running seperately in parallel. And so here this MAIN-code can do other stuffs.
+                    #BUT as soon as the below await proc.communicate() is called, this MAIN-code will wait for the child - proc to finish first!
+                    stdout, stderr = await proc.communicate()
+                    print(f'[{cmd!r} exited with {proc.returncode}]')
+                    if stdout:
+                        print(f'[stdout]\n{stdout.decode()}')
+                    if stderr:
+                        print(f'[stderr]\n{stderr.decode()}')
+                    print("Thumbnail-Generated! Now uploading file", file_path)
+                    await client.send_file(chat, file_path, caption = lect_caption, supports_streaming=True, progress_callback=callback, thumb='thumb.jpg')
                 except errors.FloodWaitError as e:
                     print("[FloodWaitError] Failed to upload :", file_path, "!!!!!")
                     print("[FloodWaitError] were asked to wait for", e.seconds, " but will be waiting for", e.seconds + 120)
