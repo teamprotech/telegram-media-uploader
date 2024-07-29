@@ -39,7 +39,15 @@ $ python uploader.py myVideos/*
 ```
 $ python uploader.py --fresh myVideos/*
 ```
-	=> Run with "--fresh" flag any time you want to FORCE to start the file-set NOT resume...
+	=> Run with "--fresh" flag any time you want to FORCE to start the file-sets as new (NOT resume)...
+
+### zsh shell 
+Default globbing is always alphabetical in most shells.
+zsh shell is recommended to force file sequncing in time based shorting (instead of Alphabatical shorting) with option (Om) as:
+
+```
+$ python uploader.py myVideos/*(Om)
+```
 
 ## Some Fixes for reference
 To fix the error of "telethon.errors.rpcbaseerrors.AuthKeyError: RPCError 406: UPDATE_APP_TO_LOGIN (caused by SignInRequest)..."
@@ -49,3 +57,9 @@ Use below code to update to v-1.25++ at the time of writing...
 $ python3 -m pip install --upgrade telethon
 ```
 Ref: https://github.com/LonamiWebs/Telethon/issues/3215#issuecomment-985954619
+
+To let telethon determine metadata from audio and video files automatically while uploading the video file, so that the uploaded video shows the proper duratin,
+instead of the false 0:0, you may install the python module "hachoir" as:
+```
+$ python3 -m pip install -U hachoir
+```
